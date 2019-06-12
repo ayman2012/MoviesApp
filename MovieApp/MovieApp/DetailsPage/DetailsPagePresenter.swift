@@ -7,3 +7,15 @@
 //
 
 import Foundation
+protocol DetailsPageViewProtocol: class {
+    
+}
+class DetailsPagePresenter{
+    private weak var DetailsPageView: DetailsPageViewProtocol!
+    init(viewController:DetailsPageViewProtocol) {
+        DetailsPageView = viewController
+    }
+    func setup(){
+        
+    }
+}
