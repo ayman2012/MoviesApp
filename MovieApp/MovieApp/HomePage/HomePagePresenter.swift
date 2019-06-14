@@ -11,28 +11,40 @@ protocol HomePageViewProtocol: class {
     func showLoadingIndicator()
     func showEmptyData()
     func showItemsList()
+    func navigateToDetailsPage(dataModel:Result2?)
 }
 class HomePagePresenter{
     
     //MARK: - Variables
-    private weak var controller: HomePageViewProtocol!
-    var dataSource: [DataModel]!
+    private weak var homePageController: HomePageViewProtocol!
+    var dataSource: HomePageModel!
     
     // MARK: - Initializers 
     init(ViewController:HomePageViewProtocol) {
-        controller = ViewController
+        homePageController = ViewController
     }
     
     // MARK: - Functions
     func setup(){
         // TODO: get data
-        dataSource = [DataModel(),DataModel(),DataModel(),DataModel(),DataModel()]
+//        let homepageItem = HomePageItem.init(title: "title1", posterPath: "/kZv92eTc0Gg3mKxqjjDAM73z9cy.jpg", overview: "/kZv92eTc0Gg3mKxqjjDAM73z9cy.jpg", releaseDate: "/kZv92eTc0Gg3mKxqjjDAM73z9cy.jpg")
+//        dataSource = HomePageModel.init(page: 1, totalResults: 20, totalPages: 20, results: [homepageItem])
+        MovieServiceAPI.shared.requestData(url: Endpoint.discover.rawValue, decodingType: HomePageModel.self) { result in
+            switch result {
+                
+            case .success(let model):
+                self.dataSource = model
+                self.homePageController.showItemsList()
+            case .failure(let error):
+                debugPrint(error)
+            }
+        }
+    }
+    func goToDetailsScreen(index:Int){
+        homePageController.navigateToDetailsPage(dataModel: dataSource.results?[index])
     }
     
     
     
-    
 }
-class DataModel{
-    
-}
+

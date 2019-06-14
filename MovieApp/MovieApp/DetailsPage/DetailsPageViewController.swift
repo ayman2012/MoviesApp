@@ -19,13 +19,27 @@ class DetailsPageViewController: UIViewController {
     // MARK: - Variables
     var presenter: DetailsPagePresenter!
     
+    // MARK : - Initializer 
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
+    }
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-         presenter = DetailsPagePresenter.init(viewController: self)
+        presenter.setup() // notify presenter view is loaded
     }
-    
 }
 extension DetailsPageViewController: DetailsPageViewProtocol {
-    
+    func setupViewWithData(model: Result2) {
+        titleLabel.text = model.title
+        releasDateLabel.text = model.releaseDate
+        posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: nil)
+    }
 }
