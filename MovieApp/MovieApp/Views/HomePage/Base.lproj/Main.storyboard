@@ -73,6 +73,22 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </view>
                                             </collectionViewCell>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="YOV-Rc-myI">
+                                                <rect key="frame" x="58.5" y="50" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </view>
+                                            </collectionViewCell>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dLH-u0-b8y">
+                                                <rect key="frame" x="117" y="50" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </view>
+                                            </collectionViewCell>
                                         </cells>
                                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="SectionHeader" id="WhT-Ux-WlO" customClass="SectionHeader" customModule="MovieApp" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
@@ -96,11 +112,30 @@
                                             </connections>
                                         </collectionReusableView>
                                     </collectionView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9t0-HN-3HD">
+                                        <rect key="frame" x="0.0" y="603" width="375" height="0.0"/>
+                                        <subviews>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tpQ-sZ-waJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="tpQ-sZ-waJ" secondAttribute="trailing" id="4MZ-fl-zJK"/>
+                                            <constraint firstItem="tpQ-sZ-waJ" firstAttribute="leading" secondItem="9t0-HN-3HD" secondAttribute="leading" id="NUx-WV-CCK"/>
+                                            <constraint firstAttribute="bottom" secondItem="tpQ-sZ-waJ" secondAttribute="bottom" id="fVI-5D-RNS"/>
+                                            <constraint firstItem="tpQ-sZ-waJ" firstAttribute="top" secondItem="9t0-HN-3HD" secondAttribute="top" id="mXX-01-Uyr"/>
+                                            <constraint firstAttribute="height" id="rG8-qf-eYS"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="9t0-HN-3HD" firstAttribute="leading" secondItem="078-gv-lA4" secondAttribute="leading" id="1P8-I9-rzO"/>
+                                    <constraint firstItem="9t0-HN-3HD" firstAttribute="bottom" secondItem="078-gv-lA4" secondAttribute="bottom" id="8HK-La-dKp"/>
+                                    <constraint firstItem="078-gv-lA4" firstAttribute="trailing" secondItem="9t0-HN-3HD" secondAttribute="trailing" id="Bh0-XE-LHC"/>
                                     <constraint firstItem="pTO-Sb-pXj" firstAttribute="leading" secondItem="078-gv-lA4" secondAttribute="leading" constant="16" id="IA0-SE-Po6"/>
-                                    <constraint firstItem="078-gv-lA4" firstAttribute="bottom" secondItem="pTO-Sb-pXj" secondAttribute="bottom" id="d0s-iV-gnc"/>
+                                    <constraint firstItem="9t0-HN-3HD" firstAttribute="top" secondItem="pTO-Sb-pXj" secondAttribute="bottom" id="d0s-iV-gnc"/>
                                     <constraint firstItem="pTO-Sb-pXj" firstAttribute="top" secondItem="078-gv-lA4" secondAttribute="top" id="oRd-a3-Wne"/>
                                     <constraint firstItem="078-gv-lA4" firstAttribute="trailing" secondItem="pTO-Sb-pXj" secondAttribute="trailing" constant="16" id="yCh-Ne-7hT"/>
                                 </constraints>
@@ -120,9 +155,17 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="3mn-0P-YAh"/>
+                    <navigationItem key="navigationItem" id="3mn-0P-YAh">
+                        <barButtonItem key="rightBarButtonItem" title="Add Movie" id="txK-s1-PTd">
+                            <connections>
+                                <action selector="addMovieAction:" destination="BYZ-38-t0r" id="cfx-UW-yRN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="activityIndicatorView" destination="tpQ-sZ-waJ" id="LXg-OF-mj7"/>
                         <outlet property="errorView" destination="sXy-DK-RFd" id="YLZ-mf-rOa"/>
+                        <outlet property="loadingIndicatorViewHeightConstrant" destination="rG8-qf-eYS" id="Psx-Zp-DPL"/>
                         <outlet property="moviesCollectionView" destination="pTO-Sb-pXj" id="0Ea-im-oDv"/>
                     </connections>
                 </viewController>

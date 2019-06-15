@@ -8,7 +8,7 @@
 
 import Foundation
 enum Endpoint: String{
-    case discover = "https://api.themoviedb.org/3/discover/movie?api_key=acea91d2bff1c53e6604e4985b6989e2&page=1"
+    case discover = "/discover"
 }
 class MovieServiceAPI {
     
@@ -23,18 +23,22 @@ class MovieServiceAPI {
         case failure(Error)
     }
 
-    func requestData<T: Decodable>(url:String,decodingType: T.Type,completionHandler: @escaping (Result<T>)->()){
-    let url = URL.init(string: url)
-//    let session = URLSession(configuration: URLSessionConfiguration.default)
+    func requestData<T: Decodable>(url:String,pageNumber:Int,decodingType: T.Type,completionHandler: @escaping (Result<T>)->()){
+        let adsoluteURL = "\(url)/movie?api_key=\(apiKey)&page=\(pageNumber)"
+    let url = URL.init(string: "\(baseURL)\(adsoluteURL)")
     urlSession.dataTask(with: url!) { (data, response, error) in
         do
         {
             let model : T =   try JSONDecoder().decode(decodingType.self, from: data!)
-            completionHandler(Result.success(model))
+            DispatchQueue.main.async {
+                completionHandler(Result.success(model))
+            }
         }
         catch let error
         {
-            completionHandler(Result.failure(error))
+            DispatchQueue.main.async {
+                completionHandler(Result.failure(error))
+            }
         }
         }.resume()
 }

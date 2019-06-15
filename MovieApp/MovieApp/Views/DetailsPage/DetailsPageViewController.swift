@@ -14,7 +14,7 @@ class DetailsPageViewController: UIViewController {
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var releasDateLabel: UILabel!
-    @IBOutlet weak var overViewTextView: UITextView!
+    @IBOutlet weak var overViewTextView: UILabel!
     
     // MARK: - Variables
     var presenter: DetailsPagePresenter!
@@ -24,7 +24,6 @@ class DetailsPageViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
     }
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
@@ -40,6 +39,13 @@ extension DetailsPageViewController: DetailsPageViewProtocol {
     func setupViewWithData(model: Result2) {
         titleLabel.text = model.title
         releasDateLabel.text = model.releaseDate
-        posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: nil)
+        overViewTextView.text = model.overview
+        if let imagedata = model.imageData {
+           posterImageView.image = UIImage.init(data: imagedata)
+        }else{
+            posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
+            let data = posterImageView.image?.pngData()
+//            print(data! as NSData)
+        }
     }
 }

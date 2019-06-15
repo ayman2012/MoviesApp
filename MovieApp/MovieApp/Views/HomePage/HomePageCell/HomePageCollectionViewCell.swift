@@ -16,7 +16,12 @@ class HomePageCollectionViewCell: UICollectionViewCell {
         // Initialization code
     }
     func configureCell(model:Result2?){
-        posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + (model?.posterPath)! ?? "", placeHolder: nil)
+        guard let model = model else {return}
+        if let imagedata = model.imageData {
+            posterImageView.image = UIImage.init(data: imagedata)
+        }else{
+            posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
+        }
     }
 
 }
