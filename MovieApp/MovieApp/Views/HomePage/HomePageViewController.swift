@@ -14,18 +14,19 @@ class HomePageViewController: UIViewController {
     @IBOutlet weak var moviesCollectionView: UICollectionView!
     @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var loadingIndicatorViewHeightConstrant: NSLayoutConstraint!
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBAction func tryAginAction(_ sender: UIButton) {
+        presenter.getDataFromEndpoint(pageNumber:pageNumber)
     }
     @IBAction func addMovieAction(_ sender: Any) {
         let newMovieViewController = NewMovieViewController()
-        newMovieViewController.viewWillLayoutSubviews()
         self.navigationController?.pushViewController(newMovieViewController, animated: true)
     }
     // MARK: - Variables
     var presenter : HomePagePresenter!{
         didSet{
-            presenter.getDataFromEndpoint(pageNumber:1)
+            presenter.getDataFromEndpoint(pageNumber:pageNumber)
         }
     }
     private var pageNumber:Int = 1
@@ -83,7 +84,7 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
         presenter.goToDetailsScreen(index: indexPath)
     }
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if presenter.dataSource?.storedResult?.count ?? 0 > 0{
+        if presenter.dataSource?.storedResult?.count ?? 0 > 0 && presenter.dataSource?.results?.count ?? 0 > 0 {
             return 2
         }else{
             return 1
@@ -91,15 +92,16 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
-            if collectionView.numberOfSections > 1 {
+            if presenter.dataSource?.storedResult?.count ?? 0 == 0 {
+                sectionHeader.sectionHeaderLabel.text = "All Movies"
+                return sectionHeader
+            }else{
                 switch indexPath.section {
                 case 0 :
                     sectionHeader.sectionHeaderLabel.text = "My Movies"
                 default:
                     sectionHeader.sectionHeaderLabel.text = "All Movies"
                 }
-            }else{
-                sectionHeader.sectionHeaderLabel.text = "All Movies"
             }
             return sectionHeader
         }
@@ -112,10 +114,6 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
             presenter.getDataFromEndpoint(pageNumber: pageNumber)
         }
     }
-    private func getMoreData(pageNumber:Int){
-        
-    }
-    
 }
 extension HomePageViewController: HomePageViewProtocol{
     
@@ -137,10 +135,11 @@ extension HomePageViewController: HomePageViewProtocol{
         activityIndicatorView.isHidden = true
         activityIndicatorView.hidesWhenStopped = true
     }
-    func showEmptyData() {
-        
+    func showNotFoundData() {
+        containerView.isHidden = true
+        errorView.isHidden = false
     }
-    func showItemsList() {
+    func updataViewControllerWithData() {
         self.moviesCollectionView.reloadData()
     }
 }

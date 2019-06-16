@@ -18,9 +18,9 @@ class HomePageCollectionViewCell: UICollectionViewCell {
     func configureCell(model:Result2?){
         guard let model = model else {return}
         if model.isLocalData ?? false{
-            if FileManager.default.fileExists(atPath: model.posterPath!) {
+//            if FileManager.default.fileExists(atPath: model.posterPath!) {
                posterImageView.image = UIImage(contentsOfFile: model.posterPath!)
-            }
+//            }
         }else{
              posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
         }

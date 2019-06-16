@@ -8,15 +8,15 @@
 
 import Foundation
 struct HomePageModel: Codable{
-    let page, totalResults, totalPages: Int?
     var results: [Result2]?
     var storedResult: [Result2]?
     enum CodingKeys: String, CodingKey {
-        case page
-        case totalResults = "total_results"
-        case totalPages = "total_pages"
         case results
         case storedResult
+    }
+    init(results:[Result2],storedResult:[Result2]) {
+        self.results = results
+        self.storedResult = storedResult
     }
 }
 

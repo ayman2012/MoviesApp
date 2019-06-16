@@ -54,14 +54,12 @@ class NewMovieViewController: UIViewController {
     }
     @objc func keyboardWillShow(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            print("notification: Keyboard will show")
             if self.view.frame.origin.y == 0{
                 self.view.frame.origin.y -= keyboardSize.height
             }
         }
         
     }
-    
     @objc func keyboardWillHide(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
@@ -83,7 +81,6 @@ extension NewMovieViewController: NewMovieViewControllerProtocol{
         let title = titleLabel.text!
         let releaseDate = presenter.getStringDate(date: releaseDataPicker.date)
         let overView = overViewTextView.text
-        let imageDate = posterImageView.image!.pngData()
         let newMoviewObj = Result2.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl,isLocalData:true)
         return newMoviewObj
     }
@@ -100,9 +97,9 @@ extension NewMovieViewController: NewMovieViewControllerProtocol{
         self.navigationController?.popViewController(animated: true)
     }
     private func showEmptyFeildsAlert(){
-    let alert = UIAlertController(title: "Opps, Some feilds are empty! , Please fill them", message: nil, preferredStyle: .actionSheet)
-    alert.addAction(UIAlertAction.init(title: "OK", style: .cancel, handler: nil))
-    self.present(alert, animated: true, completion: nil)
+        let alert  = UIAlertController(title: "Warning", message: "Opps, Some feilds are empty! , Please fill them", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationControllerDelegate{
@@ -111,13 +108,10 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.openCamera()
         }))
-        
         alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
             self.openGallery()
         }))
-        
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
-        
         self.present(alert, animated: true, completion: nil)
     }
     func openCamera()
@@ -129,8 +123,7 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
             imagePicker.allowsEditing = false
             self.present(imagePicker, animated: true, completion: nil)
         }
-        else
-        {
+        else{
             let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -145,21 +138,27 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
             imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.present(imagePicker, animated: true, completion: nil)
         }
-        else
-        {
+        else{
             let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let imageURl =   info[.referenceURL] as? URL{
+        if let imageURl =   info[UIImagePickerController.InfoKey.imageURL] as? URL{
             posterPathURl = "\(imageURl)"
         }
         if let pickedImage = info[.originalImage] as? UIImage {
             posterImageView.contentMode = .scaleToFill
             posterImageView.image = pickedImage
             isImageChanged = true
+        }
+        let manager = FileManager.default;
+        let videoURL = info[UIImagePickerController.InfoKey.imageURL] as! NSURL
+        if manager.fileExists(atPath: videoURL.absoluteString ?? "") {
+            print("THERE IS a file at: \(videoURL.absoluteString)")
+        } else {
+            print("THERE IS NOT a file at: \(videoURL.absoluteString)") // ALWAYS LANDS HERE.
         }
         picker.dismiss(animated: true, completion: nil)
     }

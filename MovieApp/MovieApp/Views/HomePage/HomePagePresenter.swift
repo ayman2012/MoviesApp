@@ -10,8 +10,8 @@ import Foundation
 protocol HomePageViewProtocol: class {
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func showEmptyData()
-    func showItemsList()
+    func showNotFoundData()
+    func updataViewControllerWithData()
     func navigateToDetailsPage(dataModel:Result2?)
 }
 class HomePagePresenter{
@@ -29,19 +29,22 @@ class HomePagePresenter{
     func getDataFromEndpoint(pageNumber:Int){
         // TODO: get data
         homePageController.showLoadingIndicator()
-        MovieServiceAPI.shared.requestData(url: Endpoint.discover.rawValue, pageNumber: pageNumber, decodingType: HomePageModel.self) { [weak self] result in
+        NetworkManager.shared.requestData(url: Endpoint.discover.rawValue, pageNumber: pageNumber, decodingType: HomePageModel.self) { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(var model):
+                // check if no data found then create new dataItems else append the new dataItems
                 if self.dataSource?.results?.isEmpty ?? true{
-                    model.storedResult = CoreDataManager.shared.getMovies()
                     self.dataSource = model
                 }else{
                     self.dataSource.results? += model.results!
                 }
-                self.homePageController.showItemsList()
+                self.homePageController.updataViewControllerWithData()
             case .failure(let error):
-                debugPrint(error)
+                // if error check if no data found to display then show not found data view
+                if self.dataSource?.storedResult?.isEmpty ?? true && self.dataSource?.results?.isEmpty ?? true {
+                    self.homePageController.showNotFoundData()
+                }
             }
             self.homePageController.hideLoadingIndicator()
         }
@@ -56,8 +59,13 @@ class HomePagePresenter{
     }
     func getLoacalData(){
        let movies = CoreDataManager.shared.getMovies()
-        dataSource?.storedResult = movies
-        homePageController.showItemsList()
+        if dataSource != nil {
+            dataSource.storedResult = movies
+        }
+        else{
+            self.dataSource = HomePageModel(results: [], storedResult: movies)
+        }
+        homePageController.updataViewControllerWithData()
     }
 
 //    func getLocalMovies()-> [Result2]?{
