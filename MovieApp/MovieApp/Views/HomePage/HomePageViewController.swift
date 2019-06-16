@@ -37,31 +37,41 @@ class HomePageViewController: UIViewController {
         presenter = HomePagePresenter.init(ViewController: self)
         title = "Movies"
     }
+    override func viewWillAppear(_ animated: Bool) {
+        presenter.getLoacalData()
+    }
     func setupMoviesCollectionView(){
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
-        moviesCollectionView.prefetchDataSource = self
         moviesCollectionView.register(UINib.init(nibName: "\(HomePageCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(HomePageCollectionViewCell.self)")
         moviesCollectionView.register(UINib(nibName: "SectionHeader", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SectionHeader")
     }
 }
 extension HomePageViewController: UICollectionViewDataSource , UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-          return  presenter.dataSource?.storedResult?.count ?? 0
-        default:
-          return  presenter.dataSource?.results?.count ?? 0
+        if presenter.dataSource?.storedResult?.count ?? 0 == 0 {
+            return presenter.dataSource?.results?.count ?? 0
+        }else{
+            switch section {
+            case 0:
+                return  presenter.dataSource?.storedResult?.count ?? 0
+            default:
+                return  presenter.dataSource?.results?.count ?? 0
+            }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(HomePageCollectionViewCell.self)", for: indexPath) as? HomePageCollectionViewCell else {return UICollectionViewCell()}
-        switch indexPath.section {
-        case 0:
-            cell.configureCell(model: presenter.dataSource?.storedResult?[indexPath.row])
-        default:
+        if presenter.dataSource?.storedResult?.count ?? 0 == 0 {
             cell.configureCell(model: presenter.dataSource?.results?[indexPath.row])
+        }else{
+            switch indexPath.section {
+            case 0:
+                cell.configureCell(model: presenter.dataSource?.storedResult?[indexPath.row])
+            default:
+                cell.configureCell(model: presenter.dataSource?.results?[indexPath.row])
+            }
         }
         return cell
     }
@@ -79,23 +89,17 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
             return 1
         }
     }
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    //        return 10
-    //    }
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-    //        return 10
-    //    }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
-          if collectionView.numberOfSections > 1 {
+            if collectionView.numberOfSections > 1 {
                 switch indexPath.section {
                 case 0 :
-                    sectionHeader.sectionHeaderLabel.text = "your movies"
+                    sectionHeader.sectionHeaderLabel.text = "My Movies"
                 default:
-                    sectionHeader.sectionHeaderLabel.text = "List Of Movies"
+                    sectionHeader.sectionHeaderLabel.text = "All Movies"
                 }
             }else{
-                sectionHeader.sectionHeaderLabel.text = "List Of Movies"
+                sectionHeader.sectionHeaderLabel.text = "All Movies"
             }
             return sectionHeader
         }
@@ -109,49 +113,35 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
         }
     }
     private func getMoreData(pageNumber:Int){
-       
+        
     }
-  
+    
 }
 extension HomePageViewController: HomePageViewProtocol{
-   
+    
     func navigateToDetailsPage(dataModel: Result2?) {
         let detailsPageView = DetailsPageViewController()
         guard let dataModel = dataModel else {return}
         detailsPageView.presenter.setDataModel(model:dataModel)
         self.navigationController?.pushViewController(detailsPageView, animated: true)
     }
-     func showLoadingIndicator(){
+    func showLoadingIndicator(){
         loadingIndicatorViewHeightConstrant.constant = 40
         activityIndicatorView.startAnimating()
         moviesCollectionView.isScrollEnabled = false
     }
-     func hideLoadingIndicator(){
+    func hideLoadingIndicator(){
         loadingIndicatorViewHeightConstrant.constant = 0
         activityIndicatorView.stopAnimating()
         moviesCollectionView.isScrollEnabled = true
         activityIndicatorView.isHidden = true
         activityIndicatorView.hidesWhenStopped = true
-
     }
     func showEmptyData() {
         
     }
-    
     func showItemsList() {
-        DispatchQueue.main.async {
-            self.moviesCollectionView.reloadData()
-        }
+        self.moviesCollectionView.reloadData()
     }
 }
-extension HomePageViewController: UICollectionViewDataSourcePrefetching{
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-//        if indexPaths.contains(where: isLoadingCell) {
-//            pageNumber += 1
-//            presenter.getDataFromEndpoint(pageNumber: pageNumber)
-//        }
-    }
-//    func isLoadingCell(for indexPath: IndexPath) -> Bool {
-//        return indexPath.row >= lastIndex
-//    }
-}
+

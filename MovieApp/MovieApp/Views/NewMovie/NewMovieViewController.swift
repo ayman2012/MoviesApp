@@ -15,18 +15,9 @@ class NewMovieViewController: UIViewController {
     @IBOutlet weak var titleLabel: UITextField!
     @IBOutlet weak var overViewTextView: UITextView!
     @IBOutlet weak var releaseDataPicker: UIDatePicker!
-    
     @IBAction func saveNewMovieAction(_ sender: Any) {
-        if checkforDataFeilds() {
-          let moiveData = getMovieDataInputs()
-        }else{
-            //TODO : - show alert to fill inputs
-        }
+        presenter.saveData()
     }
-    // MARK: - Variables
-    var presenter: NewMoviePresenter!
-    private var isImageChanged:Bool = false
-    
     // MARK : - Initializer
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -36,6 +27,11 @@ class NewMovieViewController: UIViewController {
         super.init(coder: aDecoder)
         presenter = NewMoviePresenter.init(viewController: self) // inject viewController
     }
+    // MARK: - Variables
+    var presenter: NewMoviePresenter!
+    private var isImageChanged:Bool = false
+    private var posterPathURl: String!
+    
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -43,23 +39,20 @@ class NewMovieViewController: UIViewController {
         view.layoutSubviews()
         setupImageTapGesture()
         let toolbar:UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
-        //create left side empty space so that done button set on right side
         let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
         let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
         toolbar.setItems([flexSpace, doneBtn], animated: false)
         toolbar.sizeToFit()
-        //setting toolbar as inputAccessoryView
         self.titleLabel.inputAccessoryView = toolbar
         self.overViewTextView.inputAccessoryView = toolbar
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
-  @objc func doneButtonAction() {
+    @objc func doneButtonAction() {
         self.view.endEditing(true)
-    
+        
     }
-   @objc func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             print("notification: Keyboard will show")
             if self.view.frame.origin.y == 0{
@@ -69,42 +62,50 @@ class NewMovieViewController: UIViewController {
         
     }
     
-   @objc func keyboardWillHide(notification: Notification) {
+    @objc func keyboardWillHide(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
                 self.view.frame.origin.y += keyboardSize.height - 102
             }
         }
     }
-    func setupKeyboardView()
-    {
-        
-    }
-    
     // MARK: - Functions
     private func setupImageTapGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showImagePickerAlert))
         posterImageView.isUserInteractionEnabled = true
         posterImageView.addGestureRecognizer(tapGestureRecognizer)
     }
-    private func getMovieDataInputs()-> Result2{
+    
+}
+
+extension NewMovieViewController: NewMovieViewControllerProtocol{
+    func getMovieDataInputs()-> Result2{
         let title = titleLabel.text!
         let releaseDate = presenter.getStringDate(date: releaseDataPicker.date)
         let overView = overViewTextView.text
         let imageDate = posterImageView.image!.pngData()
-        let newMoviewObj = Result2.init(title: title, releaseDate: releaseDate, overview: overView! , imageData: imageDate!)
+        let newMoviewObj = Result2.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl,isLocalData:true)
         return newMoviewObj
     }
-    private func checkforDataFeilds()-> Bool{
+    func checkforDataFeilds()-> Bool{
         if titleLabel.text == "" || overViewTextView.text == "" || !isImageChanged{
             return false
         }
         return true
     }
+    func showEmptyFeilds() {
+        showEmptyFeildsAlert()
+    }
+    func popViewController() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    private func showEmptyFeildsAlert(){
+    let alert = UIAlertController(title: "Opps, Some feilds are empty! , Please fill them", message: nil, preferredStyle: .actionSheet)
+    alert.addAction(UIAlertAction.init(title: "OK", style: .cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+    }
 }
-
-extension NewMovieViewController: NewMovieViewControllerProtocol,UIImagePickerControllerDelegate,UINavigationControllerDelegate
-{
+extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     @objc func showImagePickerAlert(){
         let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
@@ -152,6 +153,9 @@ extension NewMovieViewController: NewMovieViewControllerProtocol,UIImagePickerCo
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let imageURl =   info[.referenceURL] as? URL{
+            posterPathURl = "\(imageURl)"
+        }
         if let pickedImage = info[.originalImage] as? UIImage {
             posterImageView.contentMode = .scaleToFill
             posterImageView.image = pickedImage

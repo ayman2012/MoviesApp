@@ -34,13 +34,12 @@ class HomePagePresenter{
             switch result {
             case .success(var model):
                 if self.dataSource?.results?.isEmpty ?? true{
-                    model.storedResult = self.getLocalMovies()
+                    model.storedResult = CoreDataManager.shared.getMovies()
                     self.dataSource = model
                 }else{
                     self.dataSource.results? += model.results!
                 }
                 self.homePageController.showItemsList()
-
             case .failure(let error):
                 debugPrint(error)
             }
@@ -55,24 +54,30 @@ class HomePagePresenter{
              homePageController.navigateToDetailsPage(dataModel: dataSource.results?[index.row])
         }
     }
-    func getLocalMovies()-> [Result2]?{
-        var homePageItems: [Result2] = []
-        let path = Bundle.main.path(forResource: "Movies", ofType: "plist")!
-        let dict = NSDictionary(contentsOfFile: path)
-        if let fileUrl = Bundle.main.url(forResource: "Movies", withExtension: "plist"),
-            let data = try? Data(contentsOf: fileUrl) {
-            if let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [[String: Any]] { // [String: Any] which ever it is
-                let decoder = PropertyListDecoder()
-                do{
-                    homePageItems = try decoder.decode([Result2].self, from: data)
-                }
-                catch{
-                    print(error)
-                }
-            }
-        }
-        return homePageItems
+    func getLoacalData(){
+       let movies = CoreDataManager.shared.getMovies()
+        dataSource?.storedResult = movies
+        homePageController.showItemsList()
     }
+
+//    func getLocalMovies()-> [Result2]?{
+//        var homePageItems: [Result2] = []
+//        let path = Bundle.main.path(forResource: "Movies", ofType: "plist")!
+//        let dict = NSDictionary(contentsOfFile: path)
+//        if let fileUrl = Bundle.main.url(forResource: "Movies", withExtension: "plist"),
+//            let data = try? Data(contentsOf: fileUrl) {
+//            if let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [[String: Any]] { // [String: Any] which ever it is
+//                let decoder = PropertyListDecoder()
+//                do{
+//                    homePageItems = try decoder.decode([Result2].self, from: data)
+//                }
+//                catch{
+//                    print(error)
+//                }
+//            }
+//        }
+//        return homePageItems
+//    }
     
     
     

@@ -8,7 +8,10 @@
 
 import Foundation
 protocol NewMovieViewControllerProtocol: class{
-    
+    func checkforDataFeilds()-> Bool
+    func getMovieDataInputs()->Result2
+    func showEmptyFeilds()
+    func popViewController()
 }
 class NewMoviePresenter {
     private weak var viewController: NewMovieViewControllerProtocol!
@@ -20,5 +23,14 @@ class NewMoviePresenter {
         formatter.dateFormat = "yyyy-MM-dd"
         let stringDate = formatter.string(from: date)
         return stringDate
+    }
+    func saveData(){
+        if viewController.checkforDataFeilds() {
+            let moiveData = viewController.getMovieDataInputs()
+            CoreDataManager.shared.saveMovie(model: moiveData)
+        }else{
+            viewController.showEmptyFeilds()
+        }
+        viewController.popViewController()
     }
 }

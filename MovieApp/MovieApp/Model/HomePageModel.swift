@@ -23,16 +23,15 @@ struct HomePageModel: Codable{
 // MARK: - Result
 struct Result2: Codable{
     let title: String?
-    let posterPath: String?
+    var posterPath: String?
     let overview: String?
     let releaseDate: String?
-    let imageData: Data?
+    var isLocalData:Bool?
     enum CodingKeys: String, CodingKey {
         case title
         case posterPath = "poster_path"
         case overview
         case releaseDate = "release_date"
-        case imageData
     }
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -40,14 +39,14 @@ struct Result2: Codable{
         posterPath = try values.decodeIfPresent(String.self, forKey: .posterPath)
         overview = try values.decodeIfPresent(String.self, forKey: .overview)
         releaseDate = try values.decodeIfPresent(String.self, forKey: .releaseDate)
-        imageData  = try values.decodeIfPresent(Data.self, forKey: .imageData)
     }
-    init(title:String,releaseDate:String,overview:String,imageData:Data,posterPath:String = "") {
+    init(title:String,releaseDate:String,overview:String,posterPath:String,isLocalData:Bool) {
         self.title = title
         self.releaseDate = releaseDate
         self.overview = overview
-        self.imageData = imageData
         self.posterPath = posterPath
+        self.isLocalData = isLocalData
     }
 }
+
 
