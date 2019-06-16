@@ -14,7 +14,6 @@ class HomePageViewController: UIViewController {
     @IBOutlet weak var moviesCollectionView: UICollectionView!
     @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var loadingIndicatorViewHeightConstrant: NSLayoutConstraint!
-    
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBAction func tryAginAction(_ sender: UIButton) {
     }
@@ -44,10 +43,7 @@ class HomePageViewController: UIViewController {
         moviesCollectionView.prefetchDataSource = self
         moviesCollectionView.register(UINib.init(nibName: "\(HomePageCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(HomePageCollectionViewCell.self)")
         moviesCollectionView.register(UINib(nibName: "SectionHeader", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SectionHeader")
-   
     }
-    
-    
 }
 extension HomePageViewController: UICollectionViewDataSource , UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -90,18 +86,6 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
     //        return 10
     //    }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        if kind == UICollectionView.elementKindSectionFooter && indexPath.section == 1 {
-//            let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer", for: indexPath) as! FooterView
-//            let loading = UIActivityIndicatorView()
-//            loading.style = .gray
-//            loading.translatesAutoresizingMaskIntoConstraints = false
-//            loading.tintColor = UIColor.gray
-//            loading.tag = -123456
-//            view.addSubview(loading)
-//            view.addConstraint(NSLayoutConstraint(item: loading, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0))
-//            view.addConstraint(NSLayoutConstraint(item: loading, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: 0))
-//            return view
-//        }
         if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
           if collectionView.numberOfSections > 1 {
                 switch indexPath.section {
@@ -109,8 +93,6 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
                     sectionHeader.sectionHeaderLabel.text = "your movies"
                 default:
                     sectionHeader.sectionHeaderLabel.text = "List Of Movies"
-                   
-                    
                 }
             }else{
                 sectionHeader.sectionHeaderLabel.text = "List Of Movies"
@@ -118,6 +100,13 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
             return sectionHeader
         }
         return UICollectionReusableView()
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastIndex = (presenter.dataSource.results?.count ?? 0) / 2
+        if indexPath.row == lastIndex {
+            pageNumber += 1
+            presenter.getDataFromEndpoint(pageNumber: pageNumber)
+        }
     }
     private func getMoreData(pageNumber:Int){
        
@@ -141,7 +130,6 @@ extension HomePageViewController: HomePageViewProtocol{
         loadingIndicatorViewHeightConstrant.constant = 0
         activityIndicatorView.stopAnimating()
         moviesCollectionView.isScrollEnabled = true
-        activityIndicatorView.backgroundColor = .red
         activityIndicatorView.isHidden = true
         activityIndicatorView.hidesWhenStopped = true
 
@@ -158,17 +146,12 @@ extension HomePageViewController: HomePageViewProtocol{
 }
 extension HomePageViewController: UICollectionViewDataSourcePrefetching{
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        if indexPaths.contains(where: isLoadingCell) {
-            pageNumber += 1
-            presenter.getDataFromEndpoint(pageNumber: pageNumber)
-        }
+//        if indexPaths.contains(where: isLoadingCell) {
+//            pageNumber += 1
+//            presenter.getDataFromEndpoint(pageNumber: pageNumber)
+//        }
     }
-    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        
-    }
-    func isLoadingCell(for indexPath: IndexPath) -> Bool {
-       let lastIndex = (presenter.dataSource.results?.count ?? 0) / 2
-
-    return indexPath.row >= lastIndex
-    }
+//    func isLoadingCell(for indexPath: IndexPath) -> Bool {
+//        return indexPath.row >= lastIndex
+//    }
 }

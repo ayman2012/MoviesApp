@@ -221,10 +221,10 @@
 		8F7B28F422B45187000FFB8D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8F7B28FC22B58ACF000FFB8D /* extenstions */,
 				8F12698F22B056BD00EECAC9 /* HomePage */,
 				8F67D08D22B1A78800FAE453 /* DetailsPage */,
 				8F7B28F522B451B0000FFB8D /* NewMovie */,
+				8F7B28FC22B58ACF000FFB8D /* extenstions */,
 			);
 			path = Views;
 			sourceTree = "<group>";
