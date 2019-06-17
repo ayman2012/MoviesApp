@@ -26,6 +26,7 @@ class HomePageViewController: UIViewController {
     // MARK: - Variables
     var presenter : HomePagePresenter!{
         didSet{
+            presenter.getLoacalData()
             presenter.getDataFromEndpoint(pageNumber:pageNumber)
         }
     }
@@ -36,7 +37,7 @@ class HomePageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMoviesCollectionView()
-        presenter = HomePagePresenter.init(ViewController: self)
+        presenter = HomePagePresenter.init(viewController: self)
         title = "Movies"
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -108,10 +109,11 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
         }
         return UICollectionReusableView()
     }
+    
 }
 extension HomePageViewController: HomePageViewProtocol{
     
-    func navigateToDetailsPage(dataModel: MoviesItems?) {
+    func navigateToDetailsPage(dataModel: MoviesItem?) {
         let detailsPageView = DetailsPageViewController()
         guard let dataModel = dataModel else {return}
         detailsPageView.presenter.setDataModel(model:dataModel)

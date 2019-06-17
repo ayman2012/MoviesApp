@@ -36,10 +36,17 @@ class DetailsPageViewController: UIViewController {
     }
 }
 extension DetailsPageViewController: DetailsPageViewProtocol {
-    func setupViewWithData(model: MoviesItems) {
+    func setupViewWithData(model: MoviesItem?) {
+        guard let model = model else {return}
         titleLabel.text = model.title
         releasDateLabel.text = model.releaseDate
         overViewTextView.text = model.overview
-        posterImageView.imageFromServerURL(model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
+        if model.isLocalData ?? false{
+            if FileManager.default.fileExists(atPath: (URL.init(string:model.posterPath ?? "")?.path)!) {
+                posterImageView.image = UIImage(contentsOfFile: (URL.init(string:model.posterPath ?? "")?.path)!)
+            }
+        }else{
+            posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
+        }
     }
 }

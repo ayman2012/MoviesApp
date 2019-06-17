@@ -15,7 +15,7 @@ class HomePageCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-    func configureCell(model:MoviesItems?){
+    func configureCell(model:MoviesItem?){
         guard let model = model else {return}
         // check if dataModel is local or not to use baseUrl for remote Image
         if model.isLocalData ?? false{
@@ -25,6 +25,10 @@ class HomePageCollectionViewCell: UICollectionViewCell {
         }else{
              posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
         }
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        posterImageView.cancelImageLoad()
     }
 
 }

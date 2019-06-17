@@ -14,7 +14,7 @@ class CoreDataManager{
     private init(){}
     
     ///save movie in local storage
-    func saveMovie(model:MoviesItems){
+    func saveMovie(model:MoviesItem){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
@@ -30,11 +30,11 @@ class CoreDataManager{
         }
     }
     ///get array of movies from local storage
-    func getMovies()->[MoviesItems]{
+    func getMovies()->[MoviesItem]{
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         _ = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
-        var movies: [MoviesItems] = []
+        var movies: [MoviesItem] = []
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MoviesDataModel")
         request.returnsObjectsAsFaults = false
         do {
@@ -44,7 +44,7 @@ class CoreDataManager{
                let overView = data.value(forKey: "overView") as! String
                let releaseDate = data.value(forKey: "releaseDate") as! String
                let posterPathUrl = data.value(forKey: "imageURl") as! String
-                movies.append(MoviesItems.init(title: title, releaseDate: releaseDate, overview: overView, posterPath: posterPathUrl,isLocalData:true))
+                movies.append(MoviesItem.init(title: title, releaseDate: releaseDate, overview: overView, posterPath: posterPathUrl,isLocalData:true))
             }
         } catch {
             

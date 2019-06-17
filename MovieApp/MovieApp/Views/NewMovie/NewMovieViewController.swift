@@ -30,7 +30,7 @@ class NewMovieViewController: UIViewController {
     // MARK: - Variables
     var presenter: NewMoviePresenter!
     private var isImageChanged:Bool = false
-    private var posterPathURl: String!
+    private var posterPathURl: String?
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -68,17 +68,17 @@ class NewMovieViewController: UIViewController {
     @objc func keyboardWillHide(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height - 102
+                self.view.frame.origin.y += keyboardSize.height
             }
         }
     }
 }
 extension NewMovieViewController: NewMovieViewControllerProtocol{
-    func getMovieDataInputs()-> MoviesItems{
+    func getMovieDataInputs()-> MoviesItem{
         let title = titleLabel.text!
         let releaseDate = presenter.getStringDate(date: releaseDataPicker.date)
         let overView = overViewTextView.text
-        let newMoviewObj = MoviesItems.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl,isLocalData:true)
+        let newMoviewObj = MoviesItem.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl ?? "",isLocalData:true)
         return newMoviewObj
     }
     func checkforDataFeilds()-> Bool{

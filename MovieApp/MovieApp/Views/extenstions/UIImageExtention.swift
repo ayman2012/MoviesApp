@@ -9,10 +9,12 @@
 import Foundation
 import UIKit
 let imageCache = NSCache<NSString, UIImage>()
+
+private let tasks: NSMapTable<UIImageView, URLSessionTask> = .weakToWeakObjects()
+
 extension UIImageView {
     
     func imageFromServerURL(_ URLString: String, placeHolder: UIImage?) {
-        
         self.image = nil
         if let cachedImage = imageCache.object(forKey: NSString(string: URLString)) {
             self.image = cachedImage
@@ -21,8 +23,10 @@ extension UIImageView {
         
         if let url = URL(string: URLString) {
 //            showSpinner(onView: self)
-            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+            self.image = placeHolder
+            let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 if error != nil {
+                    if let urlError = error as? URLError, urlError.code == URLError.Code.cancelled { return }
                     print("ERROR LOADING IMAGES FROM URL: \(String(describing: error))")
                     DispatchQueue.main.async {
                         self.image = placeHolder
@@ -37,27 +41,16 @@ extension UIImageView {
                         }
                     }
                 }
-            }).resume()
-//            self.removeSpinner()
-
+            })
+            tasks.setObject(task, forKey: self)
+            task.resume()
         }
     }
-//    func showSpinner(onView : UIView) {
-//        let spinnerView = UIView.init(frame: onView.bounds)
-//        spinnerView.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-//        let ai = UIActivityIndicatorView.init(style: .whiteLarge)
-//        ai.startAnimating()
-//        ai.center = onView.center
-//
-//        DispatchQueue.main.async {
-//            spinnerView.addSubview(ai)
-//            onView.addSubview(spinnerView)
-//        }
-//            }
-//
-//    func removeSpinner() {
-//        DispatchQueue.main.async {
-//            self.removeFromSuperview()
-//        }
-//    }
+    
+    func cancelImageLoad() {
+        if let task = tasks.object(forKey: self) {
+            tasks.removeObject(forKey: self)
+            task.cancel()
+        }
+    }
 }
