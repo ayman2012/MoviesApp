@@ -8,20 +8,20 @@
 
 import Foundation
 struct HomePageModel: Codable{
-    var results: [Result2]?
-    var storedResult: [Result2]?
+    var results: [MoviesItems]?
+    var storedResult: [MoviesItems]?
     enum CodingKeys: String, CodingKey {
         case results
         case storedResult
     }
-    init(results:[Result2],storedResult:[Result2]) {
+    init(results:[MoviesItems],storedResult:[MoviesItems]) {
         self.results = results
         self.storedResult = storedResult
     }
 }
 
 // MARK: - Result
-struct Result2: Codable{
+struct MoviesItems: Codable{
     let title: String?
     var posterPath: String?
     let overview: String?

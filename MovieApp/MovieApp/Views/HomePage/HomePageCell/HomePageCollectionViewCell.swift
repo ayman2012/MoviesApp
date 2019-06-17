@@ -15,12 +15,13 @@ class HomePageCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-    func configureCell(model:Result2?){
+    func configureCell(model:MoviesItems?){
         guard let model = model else {return}
+        // check if dataModel is local or not to use baseUrl for remote Image
         if model.isLocalData ?? false{
-//            if FileManager.default.fileExists(atPath: model.posterPath!) {
-               posterImageView.image = UIImage(contentsOfFile: model.posterPath!)
-//            }
+            if FileManager.default.fileExists(atPath: (URL.init(string:model.posterPath ?? "")?.path)!) {
+                posterImageView.image = UIImage(contentsOfFile: (URL.init(string:model.posterPath ?? "")?.path)!)
+            }
         }else{
              posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
         }

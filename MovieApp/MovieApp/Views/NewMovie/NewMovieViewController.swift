@@ -32,12 +32,19 @@ class NewMovieViewController: UIViewController {
     private var isImageChanged:Bool = false
     private var posterPathURl: String!
     
-    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layoutSubviews()
         setupImageTapGesture()
+        setupKeyboard()
+    }
+    // MARK: - Functions
+    private func setupImageTapGesture() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showImagePickerAlert))
+        posterImageView.isUserInteractionEnabled = true
+        posterImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    private func setupKeyboard(){
         let toolbar:UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
         let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
         let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
@@ -50,7 +57,6 @@ class NewMovieViewController: UIViewController {
     }
     @objc func doneButtonAction() {
         self.view.endEditing(true)
-        
     }
     @objc func keyboardWillShow(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -58,7 +64,6 @@ class NewMovieViewController: UIViewController {
                 self.view.frame.origin.y -= keyboardSize.height
             }
         }
-        
     }
     @objc func keyboardWillHide(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -67,21 +72,13 @@ class NewMovieViewController: UIViewController {
             }
         }
     }
-    // MARK: - Functions
-    private func setupImageTapGesture() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showImagePickerAlert))
-        posterImageView.isUserInteractionEnabled = true
-        posterImageView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
 }
-
 extension NewMovieViewController: NewMovieViewControllerProtocol{
-    func getMovieDataInputs()-> Result2{
+    func getMovieDataInputs()-> MoviesItems{
         let title = titleLabel.text!
         let releaseDate = presenter.getStringDate(date: releaseDataPicker.date)
         let overView = overViewTextView.text
-        let newMoviewObj = Result2.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl,isLocalData:true)
+        let newMoviewObj = MoviesItems.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl,isLocalData:true)
         return newMoviewObj
     }
     func checkforDataFeilds()-> Bool{
@@ -146,20 +143,16 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let imageURl =   info[UIImagePickerController.InfoKey.imageURL] as? URL{
-            posterPathURl = "\(imageURl)"
+            posterPathURl = "\(imageURl.path)"
+          let x  = FileManager.default.fileExists(atPath: imageURl.path )
+
         }
         if let pickedImage = info[.originalImage] as? UIImage {
             posterImageView.contentMode = .scaleToFill
             posterImageView.image = pickedImage
             isImageChanged = true
         }
-        let manager = FileManager.default;
-        let videoURL = info[UIImagePickerController.InfoKey.imageURL] as! NSURL
-        if manager.fileExists(atPath: videoURL.absoluteString ?? "") {
-            print("THERE IS a file at: \(videoURL.absoluteString)")
-        } else {
-            print("THERE IS NOT a file at: \(videoURL.absoluteString)") // ALWAYS LANDS HERE.
-        }
+
         picker.dismiss(animated: true, completion: nil)
     }
 }

@@ -36,7 +36,7 @@ class DetailsPageViewController: UIViewController {
     }
 }
 extension DetailsPageViewController: DetailsPageViewProtocol {
-    func setupViewWithData(model: Result2) {
+    func setupViewWithData(model: MoviesItems) {
         titleLabel.text = model.title
         releasDateLabel.text = model.releaseDate
         overViewTextView.text = model.overview

@@ -12,7 +12,7 @@ protocol HomePageViewProtocol: class {
     func hideLoadingIndicator()
     func showNotFoundData()
     func updataViewControllerWithData()
-    func navigateToDetailsPage(dataModel:Result2?)
+    func navigateToDetailsPage(dataModel:MoviesItems?)
 }
 class HomePagePresenter{
     

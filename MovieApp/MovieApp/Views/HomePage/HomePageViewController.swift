@@ -30,7 +30,8 @@ class HomePageViewController: UIViewController {
         }
     }
     private var pageNumber:Int = 1
-    
+    private var isLoading: Bool = false
+
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,24 +108,17 @@ extension HomePageViewController: UICollectionViewDataSource , UICollectionViewD
         }
         return UICollectionReusableView()
     }
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let lastIndex = (presenter.dataSource.results?.count ?? 0) / 2
-        if indexPath.row == lastIndex {
-            pageNumber += 1
-            presenter.getDataFromEndpoint(pageNumber: pageNumber)
-        }
-    }
 }
 extension HomePageViewController: HomePageViewProtocol{
     
-    func navigateToDetailsPage(dataModel: Result2?) {
+    func navigateToDetailsPage(dataModel: MoviesItems?) {
         let detailsPageView = DetailsPageViewController()
         guard let dataModel = dataModel else {return}
         detailsPageView.presenter.setDataModel(model:dataModel)
         self.navigationController?.pushViewController(detailsPageView, animated: true)
     }
     func showLoadingIndicator(){
-        loadingIndicatorViewHeightConstrant.constant = 40
+        loadingIndicatorViewHeightConstrant.constant = 60
         activityIndicatorView.startAnimating()
         moviesCollectionView.isScrollEnabled = false
     }
@@ -139,8 +133,20 @@ extension HomePageViewController: HomePageViewProtocol{
         containerView.isHidden = true
         errorView.isHidden = false
     }
+    func hideNotFoundData(){
+        containerView.isHidden = false
+        errorView.isHidden = true
+    }
     func updataViewControllerWithData() {
+        hideNotFoundData()
         self.moviesCollectionView.reloadData()
     }
 }
-
+extension HomePageViewController:UIScrollViewDelegate{
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height)) {
+            pageNumber += 1
+            presenter.getDataFromEndpoint(pageNumber: pageNumber)
+        }
+    }
+}

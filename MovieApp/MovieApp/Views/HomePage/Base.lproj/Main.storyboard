@@ -56,7 +56,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pTO-Sb-pXj">
-                                        <rect key="frame" x="16" y="0.0" width="343" height="603"/>
+                                        <rect key="frame" x="16" y="0.0" width="343" height="543"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="nLL-ob-fga">
                                             <size key="itemSize" width="50" height="50"/>
@@ -113,19 +113,24 @@
                                         </collectionReusableView>
                                     </collectionView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9t0-HN-3HD">
-                                        <rect key="frame" x="0.0" y="603" width="375" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="543" width="375" height="60"/>
                                         <subviews>
-                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tpQ-sZ-waJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tpQ-sZ-waJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </activityIndicatorView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="tpQ-sZ-waJ" secondAttribute="trailing" id="4MZ-fl-zJK"/>
+                                            <constraint firstItem="tpQ-sZ-waJ" firstAttribute="top" secondItem="9t0-HN-3HD" secondAttribute="top" id="Ehg-yx-Mqy"/>
                                             <constraint firstItem="tpQ-sZ-waJ" firstAttribute="leading" secondItem="9t0-HN-3HD" secondAttribute="leading" id="NUx-WV-CCK"/>
+                                            <constraint firstItem="tpQ-sZ-waJ" firstAttribute="leading" secondItem="9t0-HN-3HD" secondAttribute="leading" id="XfW-xG-QIi"/>
+                                            <constraint firstAttribute="bottom" secondItem="tpQ-sZ-waJ" secondAttribute="bottom" id="atQ-fJ-Va1"/>
                                             <constraint firstAttribute="bottom" secondItem="tpQ-sZ-waJ" secondAttribute="bottom" id="fVI-5D-RNS"/>
                                             <constraint firstItem="tpQ-sZ-waJ" firstAttribute="top" secondItem="9t0-HN-3HD" secondAttribute="top" id="mXX-01-Uyr"/>
-                                            <constraint firstAttribute="height" id="rG8-qf-eYS"/>
+                                            <constraint firstAttribute="height" constant="60" id="rG8-qf-eYS"/>
+                                            <constraint firstAttribute="trailing" secondItem="tpQ-sZ-waJ" secondAttribute="trailing" id="tyY-S3-i7c"/>
                                         </constraints>
                                     </view>
                                 </subviews>

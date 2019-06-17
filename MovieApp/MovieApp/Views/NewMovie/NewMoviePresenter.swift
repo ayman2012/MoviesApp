@@ -9,7 +9,7 @@
 import Foundation
 protocol NewMovieViewControllerProtocol: class{
     func checkforDataFeilds()-> Bool
-    func getMovieDataInputs()->Result2
+    func getMovieDataInputs()->MoviesItems
     func showEmptyFeilds()
     func popViewController()
 }

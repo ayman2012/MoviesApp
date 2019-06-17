@@ -15,7 +15,7 @@ class NetworkManager {
     public static let shared = NetworkManager()
     private init() {}
     private let urlSession = URLSession.shared
-    private let baseURL = "https://api.themoviedb.org/3"
+    private let baseURL = "http//api.themoviedb.org/3"
     private let apiKey = "acea91d2bff1c53e6604e4985b6989e2"
     
     public enum Result<T> {

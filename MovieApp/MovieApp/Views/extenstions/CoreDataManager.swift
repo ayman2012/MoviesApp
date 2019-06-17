@@ -12,7 +12,9 @@ import CoreData
 class CoreDataManager{
     static let shared = CoreDataManager()
     private init(){}
-    func saveMovie(model:Result2){
+    
+    ///save movie in local storage
+    func saveMovie(model:MoviesItems){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
@@ -27,11 +29,12 @@ class CoreDataManager{
             print("Failed saving")
         }
     }
-    func getMovies()->[Result2]{
+    ///get array of movies from local storage
+    func getMovies()->[MoviesItems]{
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         _ = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
-        var movies: [Result2] = []
+        var movies: [MoviesItems] = []
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MoviesDataModel")
         request.returnsObjectsAsFaults = false
         do {
@@ -41,7 +44,7 @@ class CoreDataManager{
                let overView = data.value(forKey: "overView") as! String
                let releaseDate = data.value(forKey: "releaseDate") as! String
                let posterPathUrl = data.value(forKey: "imageURl") as! String
-                movies.append(Result2.init(title: title, releaseDate: releaseDate, overview: overView, posterPath: posterPathUrl,isLocalData:true))
+                movies.append(MoviesItems.init(title: title, releaseDate: releaseDate, overview: overView, posterPath: posterPathUrl,isLocalData:true))
             }
         } catch {
             

@@ -8,17 +8,17 @@
 
 import Foundation
 protocol DetailsPageViewProtocol: class {
-    func setupViewWithData(model:Result2)
+    func setupViewWithData(model:MoviesItems)
 }
 class DetailsPagePresenter{
     
     private weak var DetailsPageView: DetailsPageViewProtocol!
-    var dataSource: Result2!
+    var dataSource: MoviesItems!
 
     init(viewController:DetailsPageViewProtocol) {
         DetailsPageView = viewController
     }
-    func setDataModel(model:Result2){
+    func setDataModel(model:MoviesItems){
         self.dataSource = model
     }
     func setup(){
