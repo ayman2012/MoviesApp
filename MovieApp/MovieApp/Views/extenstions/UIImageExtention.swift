@@ -23,7 +23,7 @@ extension UIImageView {
 //            showSpinner(onView: self)
             URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 if error != nil {
-                    print("ERROR LOADING IMAGES FROM URL: \(error)")
+                    print("ERROR LOADING IMAGES FROM URL: \(String(describing: error))")
                     DispatchQueue.main.async {
                         self.image = placeHolder
                     }

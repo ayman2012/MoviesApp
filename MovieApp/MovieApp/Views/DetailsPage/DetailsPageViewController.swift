@@ -40,7 +40,6 @@ extension DetailsPageViewController: DetailsPageViewProtocol {
         titleLabel.text = model.title
         releasDateLabel.text = model.releaseDate
         overViewTextView.text = model.overview
-            posterImageView.imageFromServerURL(model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
-            let data = posterImageView.image?.pngData()
+        posterImageView.imageFromServerURL(model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
     }
 }

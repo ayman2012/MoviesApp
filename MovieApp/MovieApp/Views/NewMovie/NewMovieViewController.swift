@@ -144,15 +144,12 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let imageURl =   info[UIImagePickerController.InfoKey.imageURL] as? URL{
             posterPathURl = "\(imageURl.path)"
-          let x  = FileManager.default.fileExists(atPath: imageURl.path )
-
         }
         if let pickedImage = info[.originalImage] as? UIImage {
             posterImageView.contentMode = .scaleToFill
             posterImageView.image = pickedImage
             isImageChanged = true
         }
-
         picker.dismiss(animated: true, completion: nil)
     }
 }

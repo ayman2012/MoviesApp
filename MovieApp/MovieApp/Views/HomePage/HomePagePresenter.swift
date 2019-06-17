@@ -32,7 +32,7 @@ class HomePagePresenter{
         NetworkManager.shared.requestData(url: Endpoint.discover.rawValue, pageNumber: pageNumber, decodingType: HomePageModel.self) { [weak self] result in
             guard let self = self else {return}
             switch result {
-            case .success(var model):
+            case .success(let model):
                 // check if no data found then create new dataItems else append the new dataItems
                 if self.dataSource?.results?.isEmpty ?? true{
                     self.dataSource = model
@@ -40,7 +40,7 @@ class HomePagePresenter{
                     self.dataSource.results? += model.results!
                 }
                 self.homePageController.updataViewControllerWithData()
-            case .failure(let error):
+            case .failure(_):
                 // if error check if no data found to display then show not found data view
                 if self.dataSource?.storedResult?.isEmpty ?? true && self.dataSource?.results?.isEmpty ?? true {
                     self.homePageController.showNotFoundData()
@@ -66,28 +66,6 @@ class HomePagePresenter{
             self.dataSource = HomePageModel(results: [], storedResult: movies)
         }
         homePageController.updataViewControllerWithData()
-    }
-
-//    func getLocalMovies()-> [Result2]?{
-//        var homePageItems: [Result2] = []
-//        let path = Bundle.main.path(forResource: "Movies", ofType: "plist")!
-//        let dict = NSDictionary(contentsOfFile: path)
-//        if let fileUrl = Bundle.main.url(forResource: "Movies", withExtension: "plist"),
-//            let data = try? Data(contentsOf: fileUrl) {
-//            if let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [[String: Any]] { // [String: Any] which ever it is
-//                let decoder = PropertyListDecoder()
-//                do{
-//                    homePageItems = try decoder.decode([Result2].self, from: data)
-//                }
-//                catch{
-//                    print(error)
-//                }
-//            }
-//        }
-//        return homePageItems
-//    }
-    
-    
-    
+    } 
 }
 
