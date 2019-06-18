@@ -50,12 +50,17 @@ class HomePagePresenter{
         }
     }
     func goToDetailsScreen(index:IndexPath){
-        switch index.section {
-        case 0:
-             homePageController.navigateToDetailsPage(dataModel: dataSource.storedResult?[index.row])
-        default:
-             homePageController.navigateToDetailsPage(dataModel: dataSource.results?[index.row])
+        if dataSource.storedResult?.count ?? 0 > 0{
+            switch index.section {
+            case 0:
+                homePageController.navigateToDetailsPage(dataModel: dataSource.storedResult?[index.row])
+            default:
+                homePageController.navigateToDetailsPage(dataModel: dataSource.results?[index.row])
+            }
+        }else{
+            homePageController.navigateToDetailsPage(dataModel: dataSource.results?[index.row])
         }
+       
     }
     func getLoacalData(){
        let movies = CoreDataManager.shared.getMovies()
