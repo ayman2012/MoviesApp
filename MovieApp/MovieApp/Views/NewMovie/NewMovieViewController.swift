@@ -31,10 +31,14 @@ class NewMovieViewController: UIViewController {
     var presenter: NewMoviePresenter!
     private var isImageChanged:Bool = false
     private var posterPathURl: String?
+    private var frameOriginYPostion: CGFloat?
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        overViewTextView.layer.borderWidth = 1
+        overViewTextView.layer.borderColor = UIColor.gray.cgColor
+
         setupImageTapGesture()
         setupKeyboard()
     }
@@ -54,6 +58,7 @@ class NewMovieViewController: UIViewController {
         self.overViewTextView.inputAccessoryView = toolbar
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+       frameOriginYPostion = view.frame.origin.y
     }
     @objc func doneButtonAction() {
         self.view.endEditing(true)
@@ -68,7 +73,7 @@ class NewMovieViewController: UIViewController {
     @objc func keyboardWillHide(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height
+                self.view.frame.origin.y = frameOriginYPostion ?? 0
             }
         }
     }
