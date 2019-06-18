@@ -18,25 +18,21 @@ class NewMovieViewControllerTest: XCTestCase {
     func  test_setupViewWithData(){
         let newMovieView = NewMovieViewController()
         newMovieView.loadView()
-        let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
         newMovieView.showImagePickerAlert()
     }
     func  test_checkforDataFeilds(){
         let newMovieView = NewMovieViewController()
         newMovieView.loadView()
-        let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        newMovieView.checkforDataFeilds()
+        XCTAssertEqual(newMovieView.checkforDataFeilds(), false)
     }
     func  test_getMovieDataInputs(){
         let newMovieView = NewMovieViewController()
         newMovieView.loadView()
-        let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        newMovieView.getMovieDataInputs()
+         XCTAssertNotNil(newMovieView.getMovieDataInputs())
     }
     func  test_showEmptyFeilds(){
         let newMovieView = NewMovieViewController()
         newMovieView.loadView()
-        let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
         newMovieView.showEmptyFeilds()
     }
     

@@ -31,7 +31,7 @@ class NewMoviePresenterTest: XCTestCase {
         let newMovieView = NewMovieView()
         let newMoviePresenter = NewMoviePresenter.init(viewController: newMovieView)
         let date = Date()
-       XCTAssertEqual(newMoviePresenter.getStringDate(date: date), "2019-06-17")
+       XCTAssertEqual(newMoviePresenter.getStringDate(date: date), "2019-06-18") // current Data
     }
 
 }

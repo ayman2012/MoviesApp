@@ -71,10 +71,8 @@ class NewMovieViewController: UIViewController {
         }
     }
     @objc func keyboardWillHide(notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
                 self.view.frame.origin.y = frameOriginYPostion ?? 0
-            }
         }
     }
 }

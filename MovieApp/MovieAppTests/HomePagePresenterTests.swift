@@ -38,8 +38,6 @@ class HomePagePresenterTests: XCTestCase {
         homePagePresenter.getLoacalData()
     }
     func testGetDataFromEndpoint() {
-        let expext = XCTestExpectation(description: "timeOut")
-
         class HomePageView: HomePageViewProtocol{
             var expext : XCTestExpectation!
             func updataViewControllerWithData() {

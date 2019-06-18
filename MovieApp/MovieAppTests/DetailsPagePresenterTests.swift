@@ -12,11 +12,7 @@ class DetailsPagePresenterTests: XCTestCase {
     func test_sucessSetupDetailsScreen() {
         class DetailsPageView: DetailsPageViewProtocol{
             func setupViewWithData(model: MoviesItem?) {
-                if model != nil{
-                    XCTAssert(true)
-                }else{
-                    XCTAssert(false)
-                }
+                XCTAssertNotNil(model)
             }
         }
         let detailsPageView = DetailsPageView()
@@ -28,16 +24,11 @@ class DetailsPagePresenterTests: XCTestCase {
     func test_errorSetupDetailsScreen() {
         class DetailsPageView: DetailsPageViewProtocol{
             func setupViewWithData(model: MoviesItem?) {
-                if model != nil{
-                    XCTAssert(true)
-                }else{
-                   debugPrint("dataModel are nil")
-                }
+                XCTAssertNil(model)
             }
         }
         let detailsPageView = DetailsPageView()
         let datailsPagePresenter = DetailsPagePresenter.init(viewController: detailsPageView)
-        let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
         datailsPagePresenter.setup()
     }
     
