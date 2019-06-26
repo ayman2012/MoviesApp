@@ -7,26 +7,26 @@
 //
 
 import Foundation
-struct HomePageModel: Codable{
-    var results: [MoviesItem]?
-    var storedResult: [MoviesItem]?
+struct HomePageModel: Codable {
+    var results: [MoviesItem]? = []
+    var storedResult: [MoviesItem]? = []
     enum CodingKeys: String, CodingKey {
         case results
         case storedResult
     }
-    init(results:[MoviesItem],storedResult:[MoviesItem]) {
+    init(results: [MoviesItem], storedResult: [MoviesItem]) {
         self.results = results
         self.storedResult = storedResult
     }
 }
 
 // MARK: - Result
-struct MoviesItem: Codable{
+struct MoviesItem: Codable {
     let title: String?
     var posterPath: String?
     let overview: String?
     let releaseDate: String?
-    var isLocalData:Bool?
+    var isLocalData: Bool?
     enum CodingKeys: String, CodingKey {
         case title
         case posterPath = "poster_path"
@@ -40,7 +40,7 @@ struct MoviesItem: Codable{
         overview = try values.decodeIfPresent(String.self, forKey: .overview)
         releaseDate = try values.decodeIfPresent(String.self, forKey: .releaseDate)
     }
-    init(title:String,releaseDate:String,overview:String,posterPath:String,isLocalData:Bool) {
+    init(title: String, releaseDate: String, overview: String, posterPath: String, isLocalData: Bool) {
         self.title = title
         self.releaseDate = releaseDate
         self.overview = overview
@@ -48,5 +48,3 @@ struct MoviesItem: Codable{
         self.isLocalData = isLocalData
     }
 }
-
-

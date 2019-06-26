@@ -13,18 +13,18 @@ let imageCache = NSCache<NSString, UIImage>()
 private let tasks: NSMapTable<UIImageView, URLSessionTask> = .weakToWeakObjects()
 
 extension UIImageView {
-    
+
     func imageFromServerURL(_ URLString: String, placeHolder: UIImage?) {
         self.image = nil
         if let cachedImage = imageCache.object(forKey: NSString(string: URLString)) {
             self.image = cachedImage
             return
         }
-        
+
         if let url = URL(string: URLString) {
 //            showSpinner(onView: self)
             self.image = placeHolder
-            let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+            let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, _, error) in
                 if error != nil {
                     if let urlError = error as? URLError, urlError.code == URLError.Code.cancelled { return }
                     print("ERROR LOADING IMAGES FROM URL: \(String(describing: error))")
@@ -46,7 +46,7 @@ extension UIImageView {
             task.resume()
         }
     }
-    
+
     func cancelImageLoad() {
         if let task = tasks.object(forKey: self) {
             tasks.removeObject(forKey: self)

@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 import CoreData
-class CoreDataManager{
+class CoreDataManager {
     static let shared = CoreDataManager()
-    private init(){}
-    
+    private init() {}
+
     ///save movie in local storage
-    func saveMovie(model:MoviesItem){
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    func saveMovie(model: MoviesItem) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
         let newUser = NSManagedObject(entity: entity!, insertInto: context)
@@ -30,24 +30,24 @@ class CoreDataManager{
         }
     }
     ///get array of movies from local storage
-    func getMovies()->[MoviesItem]{
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    func getMovies() -> [MoviesItem] {
+        var movies: [MoviesItem] = []
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return movies }
         let context = appDelegate.persistentContainer.viewContext
         _ = NSEntityDescription.entity(forEntityName: "MoviesDataModel", in: context)
-        var movies: [MoviesItem] = []
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MoviesDataModel")
         request.returnsObjectsAsFaults = false
         do {
-            let result = try context.fetch(request)
-            for data in result as! [NSManagedObject] {
-               let title =  data.value(forKey: "title") as! String
-               let overView = data.value(forKey: "overView") as! String
-               let releaseDate = data.value(forKey: "releaseDate") as! String
-               let posterPathUrl = data.value(forKey: "imageURl") as! String
-                movies.append(MoviesItem.init(title: title, releaseDate: releaseDate, overview: overView, posterPath: posterPathUrl,isLocalData:true))
+            guard let result = try context.fetch(request) as? [NSManagedObject] else { return movies}
+            for data in result {
+               let title =  data.value(forKey: "title") as? String
+               let overView = data.value(forKey: "overView") as? String
+               let releaseDate = data.value(forKey: "releaseDate") as? String
+               let posterPathUrl = data.value(forKey: "imageURl") as? String
+                movies.append(MoviesItem.init(title: title ?? "", releaseDate: releaseDate ?? "", overview: overView ?? "", posterPath: posterPathUrl ?? "", isLocalData: true ))
             }
         } catch {
-            
+
             print("Failed")
         }
         return movies

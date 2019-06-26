@@ -11,13 +11,13 @@ import XCTest
 
 class HomePageViewControllerTest: XCTestCase {
 
-  func  test_setupViewController(){
+  func  test_setupViewController() {
     let homePageView = HomePageViewController()
     homePageView.loadView()
     let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
     CoreDataManager.shared.saveMovie(model: movie)
     }
-    func  test_navigateToDetailsPage(){
+    func  test_navigateToDetailsPage() {
         let homePageView = HomePageViewController()
         homePageView.loadView()
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)

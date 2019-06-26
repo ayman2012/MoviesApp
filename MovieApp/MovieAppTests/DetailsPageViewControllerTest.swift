@@ -10,11 +10,11 @@ import XCTest
 @testable import MovieApp
 class DetailsPageViewControllerTest: XCTestCase {
 
-    func  test_setupViewController(){
+    func  test_setupViewController() {
         let detailsPageView = DetailsPageViewController()
         detailsPageView.viewDidLoad()
     }
-    func  test_setupViewWithData(){
+    func  test_setupViewWithData() {
         let detailsPageView = DetailsPageViewController()
         detailsPageView.loadView()
 //        let localContainer = UIView(frame:someFrame)

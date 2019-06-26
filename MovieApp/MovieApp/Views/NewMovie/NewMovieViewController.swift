@@ -9,7 +9,7 @@
 import UIKit
 import NotificationCenter
 class NewMovieViewController: UIViewController {
-    
+
     // MARK: - Outlets
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var titleLabel: UITextField!
@@ -18,7 +18,7 @@ class NewMovieViewController: UIViewController {
     @IBAction func saveNewMovieAction(_ sender: Any) {
         presenter.saveData()
     }
-    // MARK : - Initializer
+    // MARK: - Initializer
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         presenter = NewMoviePresenter.init(viewController: self) // inject viewController
@@ -29,10 +29,10 @@ class NewMovieViewController: UIViewController {
     }
     // MARK: - Variables
     var presenter: NewMoviePresenter!
-    private var isImageChanged:Bool = false
+    private var isImageChanged: Bool = false
     private var posterPathURl: String?
     private var frameOriginYPostion: CGFloat?
-    
+
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,9 +48,9 @@ class NewMovieViewController: UIViewController {
         posterImageView.isUserInteractionEnabled = true
         posterImageView.addGestureRecognizer(tapGestureRecognizer)
     }
-    private func setupKeyboard(){
-        let toolbar:UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0,  width: self.view.frame.size.width, height: 30))
-        let flexSpace = UIBarButtonItem(barButtonSystemItem:    .flexibleSpace, target: nil, action: nil)
+    private func setupKeyboard() {
+        let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 30))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneBtn: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
         toolbar.setItems([flexSpace, doneBtn], animated: false)
         toolbar.sizeToFit()
@@ -65,7 +65,7 @@ class NewMovieViewController: UIViewController {
     }
     @objc func keyboardWillShow(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
+            if self.view.frame.origin.y == 0 {
                 self.view.frame.origin.y -= keyboardSize.height
             }
         }
@@ -76,16 +76,16 @@ class NewMovieViewController: UIViewController {
         }
     }
 }
-extension NewMovieViewController: NewMovieViewControllerProtocol{
-    func getMovieDataInputs()-> MoviesItem{
+extension NewMovieViewController: NewMovieViewControllerProtocol {
+    func getMovieDataInputs() -> MoviesItem {
         let title = titleLabel.text!
         let releaseDate = presenter.getStringDate(date: releaseDataPicker.date)
         let overView = overViewTextView.text
-        let newMoviewObj = MoviesItem.init(title: title, releaseDate: releaseDate, overview: overView! , posterPath: posterPathURl ?? "",isLocalData:true)
+        let newMoviewObj = MoviesItem.init(title: title, releaseDate: releaseDate, overview: overView!, posterPath: posterPathURl ?? "", isLocalData: true)
         return newMoviewObj
     }
-    func checkforDataFeilds()-> Bool{
-        if titleLabel.text == "" || overViewTextView.text == "" || !isImageChanged{
+    func checkforDataFeilds() -> Bool {
+        if titleLabel.text == "" || overViewTextView.text == "" || !isImageChanged {
             return false
         }
         return true
@@ -96,14 +96,14 @@ extension NewMovieViewController: NewMovieViewControllerProtocol{
     func popViewController() {
         self.navigationController?.popViewController(animated: true)
     }
-    private func showEmptyFeildsAlert(){
+    private func showEmptyFeildsAlert() {
         let alert  = UIAlertController(title: "Warning", message: "Opps, Some feilds are empty! , Please fill them", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 }
-extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationControllerDelegate{
-    @objc func showImagePickerAlert(){
+extension NewMovieViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @objc func showImagePickerAlert() {
         let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.openCamera()
@@ -114,38 +114,34 @@ extension NewMovieViewController: UIImagePickerControllerDelegate,UINavigationCo
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    func openCamera()
-    {
+    func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.allowsEditing = false
             self.present(imagePicker, animated: true, completion: nil)
-        }
-        else{
+        } else {
             let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
-    func openGallery()
-    {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary){
+    func openGallery() {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.allowsEditing = true
             imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.present(imagePicker, animated: true, completion: nil)
-        }
-        else{
+        } else {
             let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let imageURl =   info[UIImagePickerController.InfoKey.imageURL] as? URL{
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        if let imageURl =   info[UIImagePickerController.InfoKey.imageURL] as? URL {
             posterPathURl = "\(imageURl.path)"
         }
         if let pickedImage = info[.originalImage] as? UIImage {

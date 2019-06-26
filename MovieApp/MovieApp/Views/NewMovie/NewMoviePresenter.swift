@@ -7,28 +7,28 @@
 //
 
 import Foundation
-protocol NewMovieViewControllerProtocol: class{
-    func checkforDataFeilds()-> Bool
-    func getMovieDataInputs()->MoviesItem
+protocol NewMovieViewControllerProtocol: class {
+    func checkforDataFeilds() -> Bool
+    func getMovieDataInputs() -> MoviesItem
     func showEmptyFeilds()
     func popViewController()
 }
 class NewMoviePresenter {
     private weak var viewController: NewMovieViewControllerProtocol!
-    init(viewController:NewMovieViewControllerProtocol) {
+    init(viewController: NewMovieViewControllerProtocol) {
         self.viewController = viewController
     }
-    func getStringDate(date:Date)->String{
+    func getStringDate(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let stringDate = formatter.string(from: date)
         return stringDate
     }
-    func saveData(){
+    func saveData() {
         if viewController.checkforDataFeilds() {
             let moiveData = viewController.getMovieDataInputs()
             CoreDataManager.shared.saveMovie(model: moiveData)
-        }else{
+        } else {
             viewController.showEmptyFeilds()
         }
         viewController.popViewController()

@@ -10,7 +10,7 @@ import XCTest
 @testable import MovieApp
 class DetailsPagePresenterTests: XCTestCase {
     func test_sucessSetupDetailsScreen() {
-        class DetailsPageView: DetailsPageViewProtocol{
+        class DetailsPageView: DetailsPageViewProtocol {
             func setupViewWithData(model: MoviesItem?) {
                 XCTAssertNotNil(model)
             }
@@ -18,11 +18,11 @@ class DetailsPagePresenterTests: XCTestCase {
         let detailsPageView = DetailsPageView()
         let datailsPagePresenter = DetailsPagePresenter.init(viewController: detailsPageView)
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        datailsPagePresenter.setDataModel(model:movie)
+        datailsPagePresenter.setDataModel(model: movie)
         datailsPagePresenter.setup()
     }
     func test_errorSetupDetailsScreen() {
-        class DetailsPageView: DetailsPageViewProtocol{
+        class DetailsPageView: DetailsPageViewProtocol {
             func setupViewWithData(model: MoviesItem?) {
                 XCTAssertNil(model)
             }
@@ -31,19 +31,19 @@ class DetailsPagePresenterTests: XCTestCase {
         let datailsPagePresenter = DetailsPagePresenter.init(viewController: detailsPageView)
         datailsPagePresenter.setup()
     }
-    
+
     func test_goTODetailsScreen() {
-        class DetailsPageView: DetailsPageViewProtocol{
-            
+        class DetailsPageView: DetailsPageViewProtocol {
+
         }
         let detailsPageView = DetailsPageView()
         let datailsPagePresenter = DetailsPagePresenter.init(viewController: detailsPageView)
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        datailsPagePresenter.setDataModel(model:movie)
+        datailsPagePresenter.setDataModel(model: movie)
     }
 }
-extension DetailsPageViewProtocol{
+extension DetailsPageViewProtocol {
     func setupViewWithData(model: MoviesItem?) {
-        
+
     }
 }

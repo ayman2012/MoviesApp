@@ -11,11 +11,11 @@ import XCTest
 class NewMoviePresenterTest: XCTestCase {
 
     func test_saveData() {
-        class NewMovieView: NewMovieViewControllerProtocol{
+        class NewMovieView: NewMovieViewControllerProtocol {
             func checkforDataFeilds() -> Bool {
                 return true
             }
-            
+
             func getMovieDataInputs() -> MoviesItem {
                 let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
                 return movie
@@ -26,7 +26,7 @@ class NewMoviePresenterTest: XCTestCase {
         newMoviePresenter.saveData()
     }
     func test_getStringDate() {
-        class NewMovieView: NewMovieViewControllerProtocol{
+        class NewMovieView: NewMovieViewControllerProtocol {
         }
         let newMovieView = NewMovieView()
         let newMoviePresenter = NewMoviePresenter.init(viewController: newMovieView)
@@ -35,20 +35,20 @@ class NewMoviePresenterTest: XCTestCase {
     }
 
 }
-extension NewMovieViewControllerProtocol{
+extension NewMovieViewControllerProtocol {
     func checkforDataFeilds() -> Bool {
         return true
     }
-    
+
     func getMovieDataInputs() -> MoviesItem {
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
         return movie
     }
     func showEmptyFeilds() {
-        
+
     }
-    
+
     func popViewController() {
-        
+
     }
 }

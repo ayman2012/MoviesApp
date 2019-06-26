@@ -10,10 +10,9 @@ import XCTest
 @testable import MovieApp
 
 class HomePagePresenterTests: XCTestCase {
-  
-    
+
     func testGoTODetailsScreen() {
-        class HomePageView: HomePageViewProtocol{
+        class HomePageView: HomePageViewProtocol {
             func navigateToDetailsPage(dataModel: MoviesItem?) {
                 XCTAssert(true)
             }
@@ -21,12 +20,12 @@ class HomePagePresenterTests: XCTestCase {
         let homePageView = HomePageView()
         let homePagePresenter = HomePagePresenter.init(viewController: homePageView)
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult:[movie])
+        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult: [movie])
         homePagePresenter.goToDetailsScreen(index: IndexPath.init(item: 0, section: 0))
     }
-    
+
     func testGetLoacalData() {
-        class HomePageView: HomePageViewProtocol{
+        class HomePageView: HomePageViewProtocol {
             func updataViewControllerWithData() {
                 XCTAssert(true)
             }
@@ -34,12 +33,12 @@ class HomePagePresenterTests: XCTestCase {
         let homePageView = HomePageView()
         let homePagePresenter = HomePagePresenter.init(viewController: homePageView)
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult:[movie])
+        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult: [movie])
         homePagePresenter.getLoacalData()
     }
     func testGetDataFromEndpoint() {
-        class HomePageView: HomePageViewProtocol{
-            var expext : XCTestExpectation!
+        class HomePageView: HomePageViewProtocol {
+            var expext: XCTestExpectation!
             func updataViewControllerWithData() {
                 XCTAssertTrue(true)
                 expext.fulfill()
@@ -48,31 +47,30 @@ class HomePagePresenterTests: XCTestCase {
         let homePageView = HomePageView()
         let homePagePresenter = HomePagePresenter.init(viewController: homePageView)
         let movie = MoviesItem.init(title: "title", releaseDate: "releaseDate", overview: "", posterPath: "posterPath", isLocalData: true)
-        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult:[movie])
-        
+        homePagePresenter.dataSource = HomePageModel.init(results: [], storedResult: [movie])
+
         homePagePresenter.getDataFromEndpoint(pageNumber: 1)
     }
 
-    
 }
 
 fileprivate extension HomePageViewProtocol {
     func showLoadingIndicator() {
-        
+
     }
     func hideLoadingIndicator() {
-        
+
     }
-    
+
     func showNotFoundData() {
-        
+
     }
-    
+
     func updataViewControllerWithData() {
-        
+
     }
-    
+
     func navigateToDetailsPage(dataModel: MoviesItem?) {
-        
+
     }
 }

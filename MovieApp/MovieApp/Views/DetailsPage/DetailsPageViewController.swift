@@ -15,11 +15,11 @@ class DetailsPageViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var releasDateLabel: UILabel!
     @IBOutlet weak var overViewTextView: UILabel!
-    
+
     // MARK: - Variables
     var presenter: DetailsPagePresenter!
-    
-    // MARK : - Initializer 
+
+    // MARK: - Initializer 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
@@ -28,7 +28,7 @@ class DetailsPageViewController: UIViewController {
         super.init(coder: aDecoder)
         presenter = DetailsPagePresenter.init(viewController: self) // inject viewController
     }
-    
+
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +41,14 @@ extension DetailsPageViewController: DetailsPageViewProtocol {
         titleLabel.text = model.title
         releasDateLabel.text = model.releaseDate
         overViewTextView.text = model.overview
-        if model.isLocalData ?? false{
-            if FileManager.default.fileExists(atPath: (URL.init(string:model.posterPath ?? "")?.path)!) {
-                posterImageView.image = UIImage(contentsOfFile: (URL.init(string:model.posterPath ?? "")?.path)!)
+        if model.isLocalData ?? false {
+            if FileManager.default.fileExists(atPath: (URL.init(string: model.posterPath ?? "")?.path)!) {
+                posterImageView.image = UIImage(contentsOfFile: (URL.init(string: model.posterPath ?? "")?.path)!)
             }
-        }else{
-            posterImageView.imageFromServerURL("https://image.tmdb.org/t/p/original" + model.posterPath! , placeHolder: UIImage.init(named: "placeholder"))
+        } else {
+            let placeholderImage = UIImage.init(named: "placeholder")
+            let posterBaseUrl = "https://image.tmdb.org/t/p/original"
+            posterImageView.imageFromServerURL("\(posterBaseUrl)" + model.posterPath!, placeHolder: placeholderImage)
         }
     }
 }
